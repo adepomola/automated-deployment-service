@@ -21,7 +21,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             cd ~/automated-deployment-service
-            git pull origin main
+            git fetch origin
+git reset --hard origin/main
 
             docker build -f docker/Dockerfile -t automated-deployment-service .
 
