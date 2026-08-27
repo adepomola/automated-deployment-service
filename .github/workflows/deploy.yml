@@ -22,10 +22,20 @@ jobs:
           script: |
             cd ~/automated-deployment-service
             git pull origin main
+
             docker build -f docker/Dockerfile -t automated-deployment-service .
+
             docker stop automated-app || true
             docker rm automated-app || true
+
             docker run -d --name automated-app -p 8080:80 automated-deployment-service
-            sudo systemctl reload nginx
-            curl -f http://localhost/ > /dev/null
-            echo "HEALTH CHECK: PASSED"
+
+            sleep 5
+
+            if curl -f http://localhost:8080/ > /dev/null; then
+              echo "HEALTH CHECK: PASSED"
+            else
+              echo "HEALTH CHECK: FAILED"
+              docker logs automated-app
+              exit 1
+            fi
