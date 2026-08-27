@@ -27,3 +27,5 @@ jobs:
             docker rm automated-app || true
             docker run -d --name automated-app -p 8080:80 automated-deployment-service
             sudo systemctl reload nginx
+            curl -f http://localhost/ > /dev/null
+            echo "HEALTH CHECK: PASSED"
